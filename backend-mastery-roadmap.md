@@ -77,7 +77,7 @@ GREEN → Tulis kode minimal agar test pass
 REFACTOR → Bersihkan tanpa mengubah behaviour
 ```
 
-- [ ] **RED**: Tulis test untuk `registerCandidate()`:
+- [X] **RED**: Tulis test untuk `registerCandidate()`:
   ```java
   @Test
   void shouldRegisterCandidateSuccessfully() {
@@ -92,10 +92,10 @@ REFACTOR → Bersihkan tanpa mengubah behaviour
       assertThat(result.email()).isEqualTo("john@email.com");
   }
   ```
-- [ ] Pastikan test **merah** dulu sebelum nulis implementasi
-- [ ] **GREEN**: Implementasi `CandidateRegistrationService` minimal
-- [ ] **REFACTOR**: Extract method, rename variable supaya readable
-- [ ] Ulangi siklus ini untuk semua service yang dibuat di milestone berikutnya
+- [X] Pastikan test **merah** dulu sebelum nulis implementasi
+- [X] **GREEN**: Implementasi `CandidateRegistrationService` minimal
+- [X] **REFACTOR**: Extract method, rename variable supaya readable
+- [X] Ulangi siklus ini untuk semua service yang dibuat di milestone berikutnya
 
 ---
 
