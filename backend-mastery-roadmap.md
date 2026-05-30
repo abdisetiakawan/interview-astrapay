@@ -8,16 +8,16 @@
 
 ## 🗺️ Overview Milestone
 
-| # | Milestone | Fokus Utama | Estimasi |
-|---|-----------|-------------|----------|
-| 1 | Foundation & TDD Setup | JUnit, Mockito, TDD workflow | 1–2 minggu |
-| 2 | Core Domain & Database Design | Data modeling, normalization, relationships | 1–2 minggu |
-| 3 | REST API Development | REST best practices, validation, error handling | 1–2 minggu |
-| 4 | Concurrency & Idempotency | Race condition, idempotent APIs | 1 minggu |
-| 5 | System Design & Architecture | High-level design, scalability thinking | 1 minggu |
-| 6 | Vector DB & AI Features | Semantic search, embeddings | 1 minggu |
-| 7 | Docker & Kubernetes | Containerization, orchestration | 1–2 minggu |
-| 8 | Infra & Observability | Infra basics, monitoring, CI/CD | 1 minggu |
+| # | Milestone                     | Fokus Utama                                     | Estimasi    |
+| - | ----------------------------- | ----------------------------------------------- | ----------- |
+| 1 | Foundation & TDD Setup        | JUnit, Mockito, TDD workflow                    | 1–2 minggu |
+| 2 | Core Domain & Database Design | Data modeling, normalization, relationships     | 1–2 minggu |
+| 3 | REST API Development          | REST best practices, validation, error handling | 1–2 minggu |
+| 4 | Concurrency & Idempotency     | Race condition, idempotent APIs                 | 1 minggu    |
+| 5 | System Design & Architecture  | High-level design, scalability thinking         | 1 minggu    |
+| 6 | Vector DB & AI Features       | Semantic search, embeddings                     | 1 minggu    |
+| 7 | Docker & Kubernetes           | Containerization, orchestration                 | 1–2 minggu |
+| 8 | Infra & Observability         | Infra basics, monitoring, CI/CD                 | 1 minggu    |
 
 ---
 
@@ -49,19 +49,19 @@ Interview TDD bukan cuma soal nulis test — mereka mau lihat kamu *think in tes
 
 ### Task 1.1 — Project Scaffolding
 
-- [ ] Init Spring Boot project via [start.spring.io](https://start.spring.io) dengan dependencies: `Spring Web`, `Spring Data JPA`, `Spring Security`, `Validation`, `Lombok`, `Testcontainers`
-- [ ] Setup struktur package:
+- [X] Init Spring Boot project via [start.spring.io](https://start.spring.io) dengan dependencies: `Spring Web`, `Spring Data JPA`, `Spring Security`, `Validation`, `Lombok`, `Testcontainers`
+- [X] Setup struktur package:
   ```
-  com.smarthire
+  com.interview.astrapay
   ├── domain/         ← entity + value objects
   ├── application/    ← service layer (business logic)
   ├── infrastructure/ ← repository, external integrations
   ├── presentation/   ← controller, DTO
   └── config/         ← Spring config
   ```
-- [ ] Tambahkan dependency: `junit-jupiter`, `mockito-core`, `mockito-junit-jupiter` di `pom.xml`
-- [ ] Setup `application.yml` untuk profile `dev`, `test`, `prod`
-- [ ] Pastikan `./mvnw test` jalan tanpa error
+- [X] Tambahkan dependency: `junit-jupiter`, `mockito-core`, `mockito-junit-jupiter` di `pom.xml`
+- [X] Setup `application.yml` untuk profile `dev`, `test`, `prod`
+- [X] Pastikan `./mvnw test` jalan tanpa error
 
 ---
 
@@ -83,10 +83,10 @@ REFACTOR → Bersihkan tanpa mengubah behaviour
   void shouldRegisterCandidateSuccessfully() {
       // given
       CandidateRegistrationRequest request = new CandidateRegistrationRequest("john@email.com", "John Doe");
-      
+
       // when
       CandidateRegistrationResult result = candidateService.register(request);
-      
+
       // then
       assertThat(result.candidateId()).isNotNull();
       assertThat(result.email()).isEqualTo("john@email.com");
@@ -106,22 +106,22 @@ REFACTOR → Bersihkan tanpa mengubah behaviour
   ```java
   @ExtendWith(MockitoExtension.class)
   class CandidateServiceTest {
-      
+
       @Mock
       private CandidateRepository candidateRepository;
-      
+
       @InjectMocks
       private CandidateService candidateService;
-      
+
       @Test
       void shouldThrowExceptionWhenEmailAlreadyExists() {
           // given
           when(candidateRepository.existsByEmail("john@email.com")).thenReturn(true);
-          
+
           // when & then
           assertThatThrownBy(() -> candidateService.register(request))
               .isInstanceOf(DuplicateEmailException.class);
-          
+
           verify(candidateRepository, never()).save(any());
       }
   }
@@ -138,10 +138,10 @@ REFACTOR → Bersihkan tanpa mengubah behaviour
   @SpringBootTest
   @Testcontainers
   class CandidateRepositoryIntegrationTest {
-      
+
       @Container
       static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
-      
+
       @DynamicPropertySource
       static void configureProperties(DynamicPropertyRegistry registry) {
           registry.add("spring.datasource.url", postgres::getJdbcUrl);
@@ -156,6 +156,7 @@ REFACTOR → Bersihkan tanpa mengubah behaviour
 ### ✅ Checkpoint Milestone 1
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Jelaskan workflow TDD kamu"* → Red-Green-Refactor
 - *"Apa bedanya unit test vs integration test?"*
 - *"Kapan pakai @Mock vs @Spy?"*
@@ -255,6 +256,7 @@ CREATE TABLE applications (
 ### ✅ Checkpoint Milestone 2
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Jelaskan normalization, sampai 3NF"* → bisa kasih contoh konkret dari project
 - *"Kapan kamu denormalize?"* → bisa jawab dengan trade-off
 - *"Gimana cara kamu model M:N relationship?"* → junction table dengan proper FK
@@ -317,13 +319,13 @@ POST   /api/v1/interviews/book         → Book slot interview (⚠️ race cond
   ```java
   @WebMvcTest(CandidateController.class)
   class CandidateControllerTest {
-      
+
       @Autowired
       private MockMvc mockMvc;
-      
+
       @MockBean
       private CandidateService candidateService;
-      
+
       @Test
       void shouldReturn201WhenCandidateRegistered() throws Exception {
           mockMvc.perform(post("/api/v1/candidates")
@@ -334,7 +336,7 @@ POST   /api/v1/interviews/book         → Book slot interview (⚠️ race cond
               .andExpect(status().isCreated())
               .andExpect(jsonPath("$.candidateId").isNotEmpty());
       }
-      
+
       @Test
       void shouldReturn400WhenEmailIsInvalid() throws Exception {
           mockMvc.perform(post("/api/v1/candidates")
@@ -361,6 +363,7 @@ POST   /api/v1/interviews/book         → Book slot interview (⚠️ race cond
 ### ✅ Checkpoint Milestone 3
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Apa bedanya PUT vs PATCH?"*
 - *"Kapan pakai 400 vs 422?"*
 - *"Gimana kamu design versioning API?"*
@@ -391,13 +394,13 @@ T4: Kandidat B book → UPDATE status = BOOKED  ← ⚠️ Double booking!
   @Test
   void shouldNotAllowDoubleBookingUnderConcurrentRequests() throws InterruptedException {
       InterviewSlot slot = createAvailableSlot();
-      
+
       ExecutorService executor = Executors.newFixedThreadPool(2);
       AtomicInteger successCount = new AtomicInteger(0);
       AtomicInteger failCount = new AtomicInteger(0);
-      
+
       CountDownLatch latch = new CountDownLatch(2);
-      
+
       for (int i = 0; i < 2; i++) {
           executor.submit(() -> {
               try {
@@ -410,7 +413,7 @@ T4: Kandidat B book → UPDATE status = BOOKED  ← ⚠️ Double booking!
               }
           });
       }
-      
+
       latch.await(5, TimeUnit.SECONDS);
       assertThat(successCount.get()).isEqualTo(1);
       assertThat(failCount.get()).isEqualTo(1);
@@ -424,32 +427,35 @@ T4: Kandidat B book → UPDATE status = BOOKED  ← ⚠️ Double booking!
 Implementasikan 3 solusi dan pahami trade-off masing-masing:
 
 **Solusi 1: Optimistic Locking (JPA `@Version`)**
+
 ```java
 @Entity
 public class InterviewSlot {
     @Version
     private Long version;
-    
+  
     // Kalau ada conflict → throws OptimisticLockException
     // Cocok untuk: low contention, lebih banyak read daripada write
 }
 ```
 
 **Solusi 2: Pessimistic Locking (`SELECT FOR UPDATE`)**
+
 ```java
 @Repository
 interface InterviewSlotRepository extends JpaRepository<InterviewSlot, UUID> {
-    
+  
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM InterviewSlot s WHERE s.id = :id")
     Optional<InterviewSlot> findByIdForUpdate(@Param("id") UUID id);
-    
+  
     // Cocok untuk: high contention, write-heavy scenario
     // Trade-off: bisa terjadi deadlock kalau tidak hati-hati
 }
 ```
 
 **Solusi 3: Database Unique Constraint**
+
 ```sql
 ALTER TABLE interview_bookings 
 ADD CONSTRAINT uq_slot_booking UNIQUE (slot_id);
@@ -475,25 +481,26 @@ HTTP Methods yang TIDAK idempotent by default: POST ← yang perlu kita handle
 ```
 
 - [ ] Implementasikan **Idempotency Key** di header:
+
   ```
   POST /api/v1/job-postings/{id}/apply
   Headers:
     Idempotency-Key: client-generated-uuid-12345
   ```
-
 - [ ] Buat `IdempotencyService`:
+
   ```java
   @Service
   public class IdempotencyService {
-      
+
       private final RedisTemplate<String, IdempotencyRecord> redisTemplate;
-      
+
       public Optional<IdempotencyRecord> findExistingResult(String idempotencyKey) {
           return Optional.ofNullable(
               redisTemplate.opsForValue().get("idempotency:" + idempotencyKey)
           );
       }
-      
+
       public void saveResult(String idempotencyKey, IdempotencyRecord record) {
           redisTemplate.opsForValue().set(
               "idempotency:" + idempotencyKey,
@@ -503,9 +510,9 @@ HTTP Methods yang TIDAK idempotent by default: POST ← yang perlu kita handle
       }
   }
   ```
-
 - [ ] Buat `@IdempotentOperation` annotation + AOP interceptor
 - [ ] Test scenario:
+
   - Request pertama → `201 Created` + simpan ke Redis
   - Request kedua dengan key yang sama → `200 OK` + return cached result (tanpa DB write baru)
   - Request dengan key baru → proses normal
@@ -515,6 +522,7 @@ HTTP Methods yang TIDAK idempotent by default: POST ← yang perlu kita handle
 ### ✅ Checkpoint Milestone 4
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Jelaskan race condition dan bagaimana cara mencegahnya"*
 - *"Apa bedanya optimistic vs pessimistic locking? Kapan pakai yang mana?"*
 - *"Apa itu idempotency? Kasih contoh real case"*
@@ -556,7 +564,7 @@ Service]   API Server]
 - [ ] Dokumentasikan keputusan arsitektur (ADR — Architecture Decision Record):
   ```markdown
   ## ADR-001: Pilih PostgreSQL bukan MongoDB
-  
+
   **Status**: Accepted
   **Context**: Data kandidat dan lamaran punya relasi yang kompleks
   **Decision**: PostgreSQL karena ACID compliance dan relational queries yang efisien
@@ -573,7 +581,7 @@ Service]   API Server]
   ```java
   @Cacheable(value = "job-postings", key = "#companyId + '-' + #page")
   public Page<JobPostingDTO> getJobPostings(UUID companyId, int page) { ... }
-  
+
   @CacheEvict(value = "job-postings", allEntries = true)
   public void createJobPosting(CreateJobPostingRequest request) { ... }
   ```
@@ -596,6 +604,7 @@ Service]   API Server]
 ### ✅ Checkpoint Milestone 5
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Gimana kamu design sistem yang bisa handle 1 juta user?"*
 - *"Di mana bottleneck paling likely di sistem kamu?"*
 - *"Jelaskan caching strategy kamu"*
@@ -615,7 +624,7 @@ Kamu sudah bisa menjawab di interview:
   ```
   Traditional DB: "SELECT * WHERE skill = 'Java'"
       → Exact match
-  
+
   Vector DB: "Find jobs similar to candidate's profile"
       → Semantic similarity (cosine distance)
   ```
@@ -640,7 +649,7 @@ Kamu sudah bisa menjawab di interview:
   ```java
   @Service
   public class EmbeddingService {
-      
+
       public float[] generateEmbedding(String text) {
           // Call embedding API
           // Return 1536-dimensional vector (OpenAI) atau 768 (BERT)
@@ -651,7 +660,7 @@ Kamu sudah bisa menjawab di interview:
   ```java
   // Saat job posting dibuat → generate embedding dari title + description + skills
   // Store di Qdrant dengan payload: { jobPostingId, companyId, salaryRange }
-  
+
   qdrantClient.upsert("job-postings", List.of(
       new PointStruct(
           jobPosting.getId().toString(),
@@ -667,7 +676,7 @@ Kamu sudah bisa menjawab di interview:
       Candidate candidate = candidateRepository.findById(candidateId).orElseThrow();
       String candidateProfile = buildProfileText(candidate);
       float[] queryVector = embeddingService.generateEmbedding(candidateProfile);
-      
+
       return qdrantClient.search("job-postings", queryVector, 10)
           .stream()
           .map(hit -> new JobRecommendation(
@@ -702,6 +711,7 @@ Kamu sudah bisa menjawab di interview:
 ### ✅ Checkpoint Milestone 6
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Apa itu Vector DB dan bedanya sama traditional DB?"*
 - *"Gimana cara kerja semantic search?"*
 - *"Apa itu embedding?"*
@@ -725,20 +735,20 @@ Kamu sudah bisa menjawab di interview:
   COPY pom.xml .
   COPY src ./src
   RUN mvn clean package -DskipTests
-  
+
   FROM eclipse-temurin:21-jre AS runtime
   WORKDIR /app
-  
+
   # Security: non-root user
   RUN useradd -m -u 1001 appuser
   USER appuser
-  
+
   COPY --from=builder /app/target/*.jar app.jar
-  
+
   EXPOSE 8080
   HEALTHCHECK --interval=30s --timeout=3s \
       CMD wget -qO- http://localhost:8080/actuator/health || exit 1
-  
+
   ENTRYPOINT ["java", "-jar", "app.jar"]
   ```
 - [ ] Buat `.dockerignore` yang tepat
@@ -764,7 +774,7 @@ Kamu sudah bisa menjawab di interview:
           condition: service_healthy
         redis:
           condition: service_healthy
-      
+
     postgres:
       image: postgres:15
       environment:
@@ -775,12 +785,12 @@ Kamu sudah bisa menjawab di interview:
         interval: 10s
       volumes:
         - postgres_data:/var/lib/postgresql/data
-      
+
     redis:
       image: redis:7-alpine
       healthcheck:
         test: ["CMD", "redis-cli", "ping"]
-      
+
     qdrant:
       image: qdrant/qdrant:latest
       ports:
@@ -795,6 +805,7 @@ Kamu sudah bisa menjawab di interview:
 
 - [ ] Install Minikube: `minikube start`
 - [ ] Buat Kubernetes manifests di folder `k8s/`:
+
   ```yaml
   # k8s/deployment.yaml
   apiVersion: apps/v1
@@ -839,6 +850,7 @@ Kamu sudah bisa menjawab di interview:
               path: /actuator/health/readiness
               port: 8080
   ```
+
   ```yaml
   # k8s/service.yaml
   apiVersion: v1
@@ -853,11 +865,11 @@ Kamu sudah bisa menjawab di interview:
       targetPort: 8080
     type: LoadBalancer
   ```
+
   ```yaml
   # k8s/configmap.yaml + secret.yaml
   # Store config terpisah dari image
   ```
-
 - [ ] Deploy: `kubectl apply -f k8s/`
 - [ ] Test: `kubectl get pods`, `kubectl logs`, `kubectl describe`
 - [ ] Coba rolling update: ubah replicas jadi 3, apply, lihat proses
@@ -868,6 +880,7 @@ Kamu sudah bisa menjawab di interview:
 ### ✅ Checkpoint Milestone 7
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Apa bedanya Docker vs Kubernetes?"*
 - *"Jelaskan multi-stage build dan kenapa itu penting"*
 - *"Gimana K8s handle service discovery?"*
@@ -887,13 +900,13 @@ Kamu sudah bisa menjawab di interview:
 - [ ] Buat `.github/workflows/ci.yml`:
   ```yaml
   name: CI Pipeline
-  
+
   on:
     push:
       branches: [main, develop]
     pull_request:
       branches: [main]
-  
+
   jobs:
     test:
       runs-on: ubuntu-latest
@@ -905,7 +918,7 @@ Kamu sudah bisa menjawab di interview:
           options: >-
             --health-cmd pg_isready
             --health-interval 10s
-      
+
       steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-java@v4
@@ -915,7 +928,7 @@ Kamu sudah bisa menjawab di interview:
           run: ./mvnw test
         - name: Upload coverage to Codecov
           uses: codecov/codecov-action@v3
-    
+
     build:
       needs: test
       runs-on: ubuntu-latest
@@ -951,7 +964,7 @@ Kamu sudah bisa menjawab di interview:
   ```java
   @Autowired
   private MeterRegistry meterRegistry;
-  
+
   // Di service layer
   meterRegistry.counter("application.submitted", "company", companyId.toString()).increment();
   ```
@@ -984,6 +997,7 @@ Kamu sudah bisa menjawab di interview:
 ### ✅ Checkpoint Milestone 8
 
 Kamu sudah bisa menjawab di interview:
+
 - *"Gimana kamu tahu kalau production sistem kamu bermasalah?"*
 - *"Jelaskan CI/CD pipeline kamu"*
 - *"Gimana cara kamu manage secrets di production?"*
@@ -996,39 +1010,44 @@ Kamu sudah bisa menjawab di interview:
 Rangkuman quick answer untuk semua topik yang mungkin ditanyain:
 
 ### TDD & Testing
-| Pertanyaan | Jawaban Singkat |
-|------------|-----------------|
-| TDD workflow? | Red → Green → Refactor |
-| @Mock vs @Spy? | @Mock: dummy object sepenuhnya. @Spy: real object, bisa partial mock |
+
+| Pertanyaan                | Jawaban Singkat                                                        |
+| ------------------------- | ---------------------------------------------------------------------- |
+| TDD workflow?             | Red → Green → Refactor                                               |
+| @Mock vs @Spy?            | @Mock: dummy object sepenuhnya. @Spy: real object, bisa partial mock   |
 | Unit vs Integration test? | Unit: isolasi, cepat. Integration: test komponen bersama, lebih lambat |
 
 ### Database
-| Pertanyaan | Jawaban Singkat |
-|------------|-----------------|
-| 1NF, 2NF, 3NF? | 1: no repeating group. 2: no partial dependency. 3: no transitive dependency |
-| Kapan denormalize? | Ketika read performance lebih kritis daripada storage cost dan write complexity |
+
+| Pertanyaan                         | Jawaban Singkat                                                                                           |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 1NF, 2NF, 3NF?                     | 1: no repeating group. 2: no partial dependency. 3: no transitive dependency                              |
+| Kapan denormalize?                 | Ketika read performance lebih kritis daripada storage cost dan write complexity                           |
 | Optimistic vs Pessimistic locking? | Optimistic: versioning, cocok untuk low contention. Pessimistic: SELECT FOR UPDATE, untuk high contention |
 
 ### Race Condition & Idempotency
-| Pertanyaan | Jawaban Singkat |
-|------------|-----------------|
-| Race condition? | Dua proses baca-tulis data yang sama secara bersamaan tanpa sinkronisasi |
-| Idempotency? | Operasi yang dipanggil N kali punya efek sama seperti dipanggil 1 kali |
-| Implementasi idempotency? | Idempotency-Key di header + cache hasil di Redis dengan TTL |
+
+| Pertanyaan                | Jawaban Singkat                                                          |
+| ------------------------- | ------------------------------------------------------------------------ |
+| Race condition?           | Dua proses baca-tulis data yang sama secara bersamaan tanpa sinkronisasi |
+| Idempotency?              | Operasi yang dipanggil N kali punya efek sama seperti dipanggil 1 kali   |
+| Implementasi idempotency? | Idempotency-Key di header + cache hasil di Redis dengan TTL              |
 
 ### REST API
-| Pertanyaan | Jawaban Singkat |
-|------------|-----------------|
-| PUT vs PATCH? | PUT: replace seluruh resource. PATCH: update sebagian field |
-| 400 vs 422? | 400: bad request syntax. 422: syntactically valid tapi semantically salah |
-| Stateless? | Server tidak simpan state client. Setiap request harus punya semua info yang dibutuhkan |
+
+| Pertanyaan    | Jawaban Singkat                                                                         |
+| ------------- | --------------------------------------------------------------------------------------- |
+| PUT vs PATCH? | PUT: replace seluruh resource. PATCH: update sebagian field                             |
+| 400 vs 422?   | 400: bad request syntax. 422: syntactically valid tapi semantically salah               |
+| Stateless?    | Server tidak simpan state client. Setiap request harus punya semua info yang dibutuhkan |
 
 ### Docker & Kubernetes
-| Pertanyaan | Jawaban Singkat |
-|------------|-----------------|
-| Docker vs K8s? | Docker: containerization. K8s: orchestration (scale, scheduling, self-healing) |
+
+| Pertanyaan                   | Jawaban Singkat                                                                               |
+| ---------------------------- | --------------------------------------------------------------------------------------------- |
+| Docker vs K8s?               | Docker: containerization. K8s: orchestration (scale, scheduling, self-healing)                |
 | Liveness vs Readiness probe? | Liveness: apakah container perlu di-restart? Readiness: apakah container siap terima traffic? |
-| Rolling update? | Update pod satu per satu, tidak ada downtime |
+| Rolling update?              | Update pod satu per satu, tidak ada downtime                                                  |
 
 ---
 
