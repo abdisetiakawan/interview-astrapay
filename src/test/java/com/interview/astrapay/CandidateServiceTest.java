@@ -3,8 +3,9 @@ package com.interview.astrapay;
 import org.junit.Test;
 
 import com.interview.astrapay.application.CandidateRegistrationService;
-import com.interview.astrapay.infrastructure.dto.request.CandidateRegistrationRequest;
-import com.interview.astrapay.infrastructure.dto.result.CandidateRegistrationResult;
+import com.interview.astrapay.presentation.dto.request.CandidateRegistrationRequest;
+import com.interview.astrapay.presentation.dto.result.CandidateRegistrationResult;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CandidateServiceTest {

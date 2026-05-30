@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.interview.astrapay.infrastructure.dto.request.CandidateRegistrationRequest;
-import com.interview.astrapay.infrastructure.dto.result.CandidateRegistrationResult;
+import com.interview.astrapay.presentation.dto.request.CandidateRegistrationRequest;
+import com.interview.astrapay.presentation.dto.result.CandidateRegistrationResult;
 
 @Service
 public class CandidateRegistrationService {

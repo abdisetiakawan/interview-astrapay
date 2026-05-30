@@ -1,4 +1,4 @@
-package com.interview.astrapay.infrastructure.dto.result;
+package com.interview.astrapay.presentation.dto.result;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.interview.astrapay.infrastructure.dto.request;
+package com.interview.astrapay.presentation.dto.request;
 
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
