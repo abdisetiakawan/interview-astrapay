@@ -7,6 +7,7 @@ import com.interview.astrapay.presentation.dto.request.CandidateRegistrationRequ
 import com.interview.astrapay.presentation.dto.result.CandidateRegistrationResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class CandidateRegistrationServiceTest {
     private final CandidateRegistrationService candidateService = new CandidateRegistrationService();
@@ -19,5 +20,17 @@ public class CandidateRegistrationServiceTest {
         // then
         assertThat(result.getCandidateId()).isNotNull();
         assertThat(result.getEmail()).isEqualTo("abdisetiawan.dev@gmail.com");
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenEmailIsNull(){
+        CandidateRegistrationRequest request = new CandidateRegistrationRequest(null, "Abdi Setiawan");
+        assertThatThrownBy(() -> candidateService.register(request)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenFullNameIsNull(){
+        CandidateRegistrationRequest request = new CandidateRegistrationRequest("abdisetiawan.dev@gmail.com", null);
+        assertThatThrownBy(()-> candidateService.register(request)).isInstanceOf(IllegalArgumentException.class);
     }
 }

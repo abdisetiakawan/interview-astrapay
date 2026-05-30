@@ -10,6 +10,7 @@ import com.interview.astrapay.presentation.dto.result.CandidateRegistrationResul
 @Service
 public class CandidateRegistrationService {
     public CandidateRegistrationResult register (CandidateRegistrationRequest registrationRequest) {
+        validateRequest(registrationRequest);
         return new CandidateRegistrationResult(
             generateUUID(),
             registrationRequest.getEmail()
@@ -18,5 +19,14 @@ public class CandidateRegistrationService {
 
     private UUID generateUUID () {
         return UUID.randomUUID();
+    }
+
+    private void validateRequest(CandidateRegistrationRequest candidateRegistrationRequest) {
+        if (candidateRegistrationRequest.getEmail() == null) {
+            throw new IllegalArgumentException("Email is required");
+        }
+        if (candidateRegistrationRequest.getFullName() == null) {
+            throw new IllegalArgumentException("FullName is required");
+        }
     }
 }
