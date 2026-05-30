@@ -8,7 +8,7 @@ import com.interview.astrapay.presentation.dto.result.CandidateRegistrationResul
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CandidateServiceTest {
+public class CandidateRegistrationServiceTest {
     private final CandidateRegistrationService candidateService = new CandidateRegistrationService();
     @Test
     public void shouldRegisterCandidateSuccessfully() {
